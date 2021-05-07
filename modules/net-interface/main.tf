@@ -4,7 +4,7 @@ data "aws_subnet" "current" {
 
 # Search for a private subnet in the same AZ where ENI is placed
 data "aws_subnet" "private" {
-  vpc_id = data.aws_subnet.current.vpc_id
+  vpc_id            = data.aws_subnet.current.vpc_id
   availability_zone = data.aws_subnet.current.availability_zone
 
   tags = {
@@ -17,7 +17,7 @@ data "aws_route_table" "private" {
 }
 
 resource "aws_eip" "this" {
-  count = var.allocate_eip ? 1 : 0
+  count             = var.allocate_eip ? 1 : 0
   network_interface = aws_network_interface.this.id
 }
 
@@ -26,7 +26,7 @@ resource "aws_network_interface" "this" {
   description       = "ENI for NAT instance"
   subnet_id         = var.subnet_id
   source_dest_check = false
-  tags              = merge(var.tags,{
+  tags = merge(var.tags, {
     Purpose = "NATInstance"
   })
 }

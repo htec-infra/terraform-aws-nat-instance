@@ -4,7 +4,7 @@ locals {
   # This should prevent to create multiple NAT instances if you have only one
   # routing table defined for private subnets. Number of routing tables have to
   # be greater or equal to number of NAT instances i.e. number of specified public subnets
-  subnets = slice(var.public_subnets, 0, min(length(var.public_subnets),length(data.aws_route_tables.private.ids)))
+  subnets = slice(var.public_subnets, 0, min(length(var.public_subnets), length(data.aws_route_tables.private.ids)))
 
   common_tags = merge({
     Name = local.name
@@ -29,17 +29,17 @@ resource "aws_security_group" "this" {
   tags        = local.common_tags
 
   egress {
-    from_port         = 0
-    to_port           = 0
-    protocol          = "all"
-    cidr_blocks       = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port         = 0
-    to_port           = 0
-    protocol          = "all"
-    cidr_blocks       = [ data.aws_vpc.this.cidr_block ]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "all"
+    cidr_blocks = [data.aws_vpc.this.cidr_block]
   }
 }
 
@@ -105,7 +105,7 @@ data "template_cloudinit_config" "user_data" {
   part {
     filename     = "runonce.sh"
     content_type = "text/x-shellscript"
-    content = templatefile("${path.module}/templates/runonce.sh", {})
+    content      = templatefile("${path.module}/templates/runonce.sh", {})
   }
 }
 
@@ -156,7 +156,7 @@ module "net_interface" {
     for subnet in local.subnets : subnet => subnet
   }
 
-  subnet_id = each.value
-  allocate_eip = var.allocate_elastic_ip
-  security_groups = [ aws_security_group.this.id ]
+  subnet_id       = each.value
+  allocate_eip    = var.allocate_elastic_ip
+  security_groups = [aws_security_group.this.id]
 }

@@ -3,7 +3,7 @@ variable "subnet_id" {
 }
 
 variable "security_groups" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -12,6 +12,6 @@ variable "allocate_eip" {
 }
 
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }

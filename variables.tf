@@ -6,12 +6,12 @@ variable "enabled" {
 
 variable "namespace" {
   description = "Module namespace"
-  type = string
+  type        = string
 }
 
 variable "environment" {
   description = "Environment"
-  type = string
+  type        = string
 }
 
 variable "name" {
@@ -42,7 +42,7 @@ variable "instance_types" {
 }
 
 variable "allocate_elastic_ip" {
-  type = bool
+  type    = bool
   default = false
 }
 
