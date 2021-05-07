@@ -70,6 +70,7 @@ module "nat_instance" {
 | <a name="input_allocate_elastic_ip"></a> [allocate\_elastic\_ip](#input\_allocate\_elastic\_ip) | n/a | `bool` | `false` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Enable or not costly resources | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment | `string` | n/a | yes |
+| <a name="input_health_check_grace_period"></a> [health\_check\_grace\_period](#input\_health\_check\_grace\_period) | How long ASG should wait before a health-check starts | `number` | `180` | no |
 | <a name="input_image_id"></a> [image\_id](#input\_image\_id) | AMI of the NAT instance. Default to the latest Amazon Linux 2 | `string` | `""` | no |
 | <a name="input_instance_types"></a> [instance\_types](#input\_instance\_types) | Candidates of spot instance type for the NAT instance. This is used in the mixed instances policy | `list(string)` | <pre>[<br>  "t3a.nano",<br>  "t3.nano"<br>]</pre> | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | Name of the key pair for the NAT instance. You can set this to assign the key pair to the NAT instance | `string` | `""` | no |

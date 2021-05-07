@@ -52,6 +52,12 @@ variable "use_spot_instance" {
   default     = true
 }
 
+variable "health_check_grace_period" {
+  description = "How long ASG should wait before a health-check starts"
+  type        = number
+  default     = 180
+}
+
 variable "key_name" {
   description = "Name of the key pair for the NAT instance. You can set this to assign the key pair to the NAT instance"
   type        = string

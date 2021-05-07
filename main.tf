@@ -21,7 +21,6 @@ data "aws_route_tables" "private" {
   }
 }
 
-
 resource "aws_security_group" "this" {
   name_prefix = "nat-instances-${lower(var.name)}"
   vpc_id      = var.vpc_id
@@ -134,6 +133,8 @@ resource "aws_autoscaling_group" "this" {
       }
     }
   }
+
+  health_check_grace_period = var.health_check_grace_period
 
   dynamic "tag" {
     for_each = local.common_tags

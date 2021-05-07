@@ -1,7 +1,7 @@
 
 
 module "nat_instance" {
-  source              = "../"
+  source              = "../../"
   environment         = "Development"
   name                = "Test"
   namespace           = "PoC"
