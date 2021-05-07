@@ -10,6 +10,19 @@
 
 ## Usage
 
+```terraform
+module "nat_instance" {
+  source              = "github.com/htec-infra/terraform-aws-nat-instance"
+  environment         = "Development"
+  name                = "Test"
+  namespace           = "PoC"
+  vpc_id              = "vpc-123456"
+  public_subnets      = ["subnet-123456789"]
+  allocate_elastic_ip = true
+}
+```
+
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
