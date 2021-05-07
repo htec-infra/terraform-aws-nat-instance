@@ -1,17 +1,26 @@
 locals {
-  // Merge the default tags and user-specified tags.
-  // User-specified tags take precedence over the default.
-
   name = "NATInstance-${var.name}"
+
+  # This should prevent to create multiple NAT instances if you have only one
+  # routing table defined for private subnets. Number of routing tables have to
+  # be greater or equal to number of NAT instances i.e. number of specified public subnets
+  subnets = slice(var.public_subnets, 0, min(length(var.public_subnets),length(data.aws_route_tables.private.ids)))
+
   common_tags = merge({
     Name = local.name
   }, var.tags)
 }
 
-
 data "aws_vpc" "this" {
   id = var.vpc_id
 }
+
+data "aws_route_tables" "private" {
+  tags = {
+    Name = "*private*"
+  }
+}
+
 
 resource "aws_security_group" "this" {
   name_prefix = "nat-instances-${lower(var.name)}"
@@ -87,7 +96,10 @@ data "template_cloudinit_config" "user_data" {
   part {
     filename     = "init.cfg"
     content_type = "text/cloud-config"
-    content = templatefile("${path.module}/templates/init.yaml", {})
+    content = templatefile("${path.module}/templates/init.yaml", {
+      # If we assign EIP, egress traffic should be routed through eth1 interface (new ENI)
+      main_interface = var.allocate_elastic_ip ? "eth1" : "eth0"
+    })
   }
 
   part {
@@ -100,9 +112,9 @@ data "template_cloudinit_config" "user_data" {
 resource "aws_autoscaling_group" "this" {
   name_prefix         = local.name
   min_size            = var.enabled ? 1 : 0
-  max_size            = length(var.public_subnets)
-  desired_capacity    = var.enabled ? length(var.public_subnets) : 0
-  vpc_zone_identifier = var.public_subnets
+  max_size            = length(local.subnets)
+  desired_capacity    = var.enabled ? length(local.subnets) : 0
+  vpc_zone_identifier = local.subnets
 
   mixed_instances_policy {
     instances_distribution {
@@ -141,7 +153,7 @@ module "net_interface" {
   source = "./modules/net-interface"
 
   for_each = {
-    for subnet in var.public_subnets : subnet => subnet
+    for subnet in local.subnets : subnet => subnet
   }
 
   subnet_id = each.value

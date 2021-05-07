@@ -1,6 +1,9 @@
 #cloud-config
 package_upgrade: true
 write_files:
+  - path: /opt/nat/conf/main-interface
+    permissions: '0755'
+    content: ${main_interface}
   - path: /opt/nat/snat.sh
     permissions: '0755'
     content: |
@@ -8,6 +11,8 @@ write_files:
       while ! ip link show dev eth1; do
         sleep 1
       done
+
+      main_interface=$(cat /opt/nat/conf/main-interface)
 
       sysctl -q -w net.ipv4.conf.all.rp_filter=0
       sysctl -q -w net.ipv4.conf.eth0.rp_filter=0
@@ -17,10 +22,12 @@ write_files:
       # enable IP forwarding and NAT
       sysctl -q -w net.ipv4.ip_forward=1
       sysctl -q -w net.ipv4.conf.eth1.send_redirects=0
-      iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+      iptables -t nat -A POSTROUTING -o $main_interface -j MASQUERADE
 
-      # switch the default route to eth1
-      ip route del default dev eth0
+      if [ "$main_interface" == "eth1" ]; then
+        # switch the default route to eth1
+        ip route del default dev eth0
+      fi
 
       # wait for network connection
       curl --retry 10 "http://www.example.com" > /tmp/curl-nat-test.log

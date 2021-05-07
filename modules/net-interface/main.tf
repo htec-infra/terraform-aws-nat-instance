@@ -2,6 +2,7 @@ data "aws_subnet" "current" {
   id = var.subnet_id
 }
 
+# Search for a private subnet in the same AZ where ENI is placed
 data "aws_subnet" "private" {
   vpc_id = data.aws_subnet.current.vpc_id
   availability_zone = data.aws_subnet.current.availability_zone
