@@ -157,7 +157,8 @@ module "net_interface" {
     for subnet in local.subnets : subnet => subnet
   }
 
-  subnet_id       = each.value
-  allocate_eip    = var.allocate_elastic_ip
-  security_groups = [aws_security_group.this.id]
+  add_db_subnet_route = var.add_db_subnet_route
+  subnet_id           = each.value
+  allocate_eip        = var.allocate_elastic_ip
+  security_groups     = [aws_security_group.this.id]
 }
