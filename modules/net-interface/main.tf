@@ -51,7 +51,8 @@ resource "aws_route" "private" {
 
 # Search for a private subnet in the same AZ where ENI is placed
 data "aws_subnet" "db" {
-  count             = var.add_db_subnet_route ? 1 : 0
+  count = var.add_db_subnet_route ? 1 : 0
+
   vpc_id            = data.aws_subnet.current.vpc_id
   availability_zone = data.aws_subnet.current.availability_zone
 
@@ -63,13 +64,13 @@ data "aws_subnet" "db" {
 data "aws_route_table" "db" {
   count = var.add_db_subnet_route ? 1 : 0
 
-  subnet_id = data.aws_subnet.db.id
+  subnet_id = data.aws_subnet.db.0.id
 }
 
 resource "aws_route" "db" {
   count = var.add_db_subnet_route ? 1 : 0
 
-  route_table_id         = data.aws_route_table.db.id
+  route_table_id         = data.aws_route_table.db.0.id
   network_interface_id   = aws_network_interface.this.id
   destination_cidr_block = "0.0.0.0/0"
 }
