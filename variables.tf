@@ -69,3 +69,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "add_db_subnet_route" {
+  description = "Whether the DB subnet should have a route to the NAT Instance ENI"
+  type        = bool
+  default     = false
+}

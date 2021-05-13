@@ -67,6 +67,7 @@ module "nat_instance" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_add_db_subnet_route"></a> [add\_db\_subnet\_route](#input\_add\_db\_subnet\_route) | Whether the DB subnet should have a route to the NAT Instance ENI | `bool` | `false` | no |
 | <a name="input_allocate_elastic_ip"></a> [allocate\_elastic\_ip](#input\_allocate\_elastic\_ip) | n/a | `bool` | `false` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Enable or not costly resources | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment | `string` | n/a | yes |
